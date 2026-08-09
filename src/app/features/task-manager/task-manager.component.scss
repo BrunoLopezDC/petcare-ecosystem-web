@@ -1,0 +1,174 @@
+.task-manager {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 720px;
+  border-radius: var(--p-content-border-radius, 6px);
+}
+
+.task-manager__title {
+  margin: 0;
+  color: #1a1a1a;
+  font-size: 1.4rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.task-manager__intro {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.task-manager__sub {
+  margin: 0;
+  color: var(--p-text-muted-color, #475569);
+}
+
+/* Tarjetas estilo referencia: blanco, sombra suave, esquinas redondeadas.
+   Agrupan el formulario de alta y la lista de tareas por separado. */
+.task-manager__card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--p-content-border-color, #e2e8f0);
+  border-radius: 12px;
+  background: var(--p-content-background, #ffffff);
+  color: #1a1a1a;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.06);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:hover {
+    border-color: var(--p-primary-color, #059669);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.task-manager__counter {
+  align-self: flex-start;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: var(--p-primary-color, #059669);
+  color: var(--p-primary-contrast-color, #fff);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.task-manager__form {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.task-manager__error {
+  margin: 0;
+  color: var(--p-red-500, #dc2626);
+  font-size: 0.9rem;
+}
+
+.task-manager__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Aspecto de input claro, consistente con los de Mascotas e Interactividad:
+   fondo blanco y texto oscuro, legible mientras se escribe. */
+.task-manager__input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--p-content-border-color, #e2e8f0);
+  border-radius: var(--p-content-border-radius, 6px);
+  background: #ffffff;
+  color: #1a1a1a;
+  caret-color: #1a1a1a;
+  font: inherit;
+
+  &::placeholder {
+    color: var(--p-text-muted-color, #64748b);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--p-primary-color, #059669);
+    box-shadow: 0 0 0 1px var(--p-primary-color, #059669);
+  }
+}
+
+/* Aspecto de los botones y sus filas (token, consistente con el tema). */
+.task-manager__task {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid var(--p-content-border-color, #e2e8f0);
+  border-radius: var(--p-content-border-radius, 6px);
+  background: #ffffff;
+  color: #1a1a1a;
+  transition: color 0.15s ease, background-color 0.15s ease, opacity 0.15s ease;
+
+  > span {
+    flex: 1;
+  }
+
+  &--done {
+    color: var(--p-text-muted-color, #64748b);
+    opacity: 0.7;
+
+    > span {
+      text-decoration: line-through;
+    }
+  }
+}
+
+.task-manager__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid transparent;
+  border-radius: var(--p-content-border-radius, 6px);
+  background: var(--p-primary-color, #059669);
+  color: var(--p-primary-contrast-color, #fff);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: var(--p-primary-hover-color, #047857);
+  }
+
+  &--danger {
+    background: var(--p-red-500, #dc2626);
+
+    &:hover {
+      background: var(--p-red-600, #b91c1c);
+    }
+  }
+}
+
+.task-manager__empty {
+  margin: 0;
+  text-align: center;
+  color: var(--p-text-muted-color, #475569);
+  padding: 1rem;
+}
+
+/* Large / TV screens (>=1920px): bigger readable type and spacing */
+@media (min-width: 1920px) {
+  .task-manager {
+    font-size: 1.25rem;
+    max-width: 1400px;
+  }
+}

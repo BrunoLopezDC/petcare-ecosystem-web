@@ -1,0 +1,40 @@
+<section class="task-manager">
+  <header class="task-manager__intro">
+    <h2 class="task-manager__title">Administrador de tareas de cuidado</h2>
+    <p class="task-manager__sub">
+      Agrega tareas como dar de comer, pasear o una vacuna pendiente. La lista se
+      manipula directamente con las APIs nativas del DOM.
+    </p>
+  </header>
+
+  <div class="task-manager__card">
+    <div class="task-manager__counter" #counter>0 tareas pendientes</div>
+
+    <form class="task-manager__form" id="task-form">
+      <input
+        #input
+        id="task-input"
+        class="p-inputtext p-component task-manager__input"
+        type="text"
+        placeholder="Ej.: dar de comer a Camila"
+        autocomplete="off"
+      />
+      <button
+        type="button"
+        class="p-button p-component task-manager__btn"
+        id="task-add"
+      >
+        Agregar tarea
+      </button>
+    </form>
+
+    <p id="task-error" class="task-manager__error" #error hidden></p>
+  </div>
+
+  <div class="task-manager__card task-manager__list-card">
+    <ul class="task-manager__list" #list></ul>
+    <p id="task-empty" class="task-manager__empty" #empty>
+      No tienes tareas pendientes
+    </p>
+  </div>
+</section>

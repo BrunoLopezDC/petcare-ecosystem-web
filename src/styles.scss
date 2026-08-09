@@ -1,0 +1,11 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* PrimeIcons (PrimeNG icon set) */
+@import 'primeicons/primeicons.css';
+
+/* Layout full-viewport para el shell (sidebar fijo + área de contenido) */
+html,
+body {
+  height: 100%;
+  margin: 0;
+}

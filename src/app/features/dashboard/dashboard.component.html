@@ -1,0 +1,159 @@
+<section class="dashboard">
+  <p-message
+    [severity]="banner().severity"
+    class="dashboard__banner"
+    styleClass="w-full"
+  >
+    {{ banner().text }}
+  </p-message>
+
+  @if (loading()) {
+    <div class="dashboard__loading" role="status" aria-label="Cargando mascotas">
+      <p-progress-spinner class="w-4rem h-4rem" strokeWidth="4" />
+    </div>
+  } @else if (error()) {
+    <div class="dashboard__error">
+      <p-message [text]="error()!" severity="error" styleClass="w-full" />
+      <div class="dashboard__retry">
+        <p-button label="Reintentar" icon="pi pi-refresh" (onClick)="load()" />
+      </div>
+    </div>
+  } @else {
+    <p-card class="dashboard__table-card">
+      <ng-template #content>
+        <div class="dashboard__table-wrap">
+          <p-iconField class="dashboard__search">
+            <p-inputIcon class="pi pi-search" />
+            <input
+              pInputText
+              type="text"
+              placeholder="Buscar mascota..."
+              (input)="onSearchChange(tableRef, $any($event.target).value)"
+            />
+          </p-iconField>
+
+          <p-table
+            #tableRef
+            [value]="pets()"
+            [globalFilterFields]="['name']"
+            dataKey="id"
+            [paginator]="pets().length > 10"
+            [rows]="10"
+            [showCurrentPageReport]="true"
+            [rowHover]="true"
+            [tableStyle]="{ 'min-width': '24rem' }"
+            styleClass="p-datatable-striped"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Nombre</th>
+                <th>Acciones</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+              <tr class="dashboard__row">
+                <td>
+                  <span class="dashboard__name">
+                    <i class="pi pi-user"></i>
+                    {{ row.name }}
+                  </span>
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="p-button p-component p-button-text p-button-icon-only dashboard__row-menu-btn"
+                    aria-label="Acciones de {{ row.name }}"
+                    (click)="openRowMenu($event, row)"
+                  >
+                    <i class="pi pi-ellipsis-v"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              @if (hasSearchFilter()) {
+                <div class="dashboard__empty">
+                  <i class="pi pi-search"></i>
+                  <h2 class="dashboard__empty-title">Sin resultados para tu búsqueda</h2>
+                  <p class="dashboard__empty-text">
+                    No se encontraron mascotas que coincidan con &laquo;{{ searchText() }}&raquo;.
+                  </p>
+                </div>
+              } @else {
+                <div class="dashboard__empty">
+                  <i class="pi pi-inbox"></i>
+                  <h2 class="dashboard__empty-title">Todavía no hay mascotas registradas</h2>
+                  <p class="dashboard__empty-text">
+                    Cuando se registren mascotas en el ecosistema, aparecerán aquí.
+                  </p>
+                </div>
+              }
+            </ng-template>
+          </p-table>
+        </div>
+      </ng-template>
+    </p-card>
+
+    <!-- Vista tarjetas (pantallas muy pequeñas) -->
+    <div class="dashboard__cards" role="list">
+      @for (row of pets(); track row.id) {
+        <button class="dashboard__card" type="button" (click)="openRowMenu($event, row)" role="listitem">
+          <span class="dashboard__card-name">
+            <i class="pi pi-user"></i>
+            {{ row.name }}
+          </span>
+          <span class="dashboard__card-field">
+            <span class="dashboard__card-label">Raza</span>
+            {{ row.breed ?? '—' }}
+          </span>
+          <span class="dashboard__card-field">
+            <span class="dashboard__card-label">Tamaño</span>
+            {{ row.size ?? '—' }}
+          </span>
+          <span class="dashboard__card-field">
+            <span class="dashboard__card-label">Nacimiento</span>
+            {{ formatDate(row.birth_date) }}
+          </span>
+        </button>
+      }
+    </div>
+
+    <!-- Menú overlay de acciones de la fila (Ver detalle). Solo se despliega
+         al hacer clic en el botón de los tres puntos de cada fila. -->
+    <p-menu #rowMenu popup [model]="rowActionItems" />
+
+    <p-dialog
+      [(visible)]="dialogVisible"
+      header="Detalle de la mascota"
+      [closable]="false"
+      [modal]="true"
+      [draggable]="false"
+      [resizable]="false"
+      styleClass="dashboard__detail"
+    >
+      @if (selectedPet(); as pet) {
+        <dl class="dashboard__detail-list">
+          <div>
+            <dt>Nombre</dt>
+            <dd>{{ pet.name }}</dd>
+          </div>
+          <div>
+            <dt>Raza</dt>
+            <dd>{{ pet.breed ?? '—' }}</dd>
+          </div>
+          <div>
+            <dt>Tamaño</dt>
+            <dd>{{ pet.size ?? '—' }}</dd>
+          </div>
+          <div>
+            <dt>Fecha de nacimiento</dt>
+            <dd>{{ formatDate(pet.birth_date) }}</dd>
+          </div>
+        </dl>
+      }
+      <div class="dashboard__dialog-actions">
+        <p-button label="Cerrar" (onClick)="closeDetail()" />
+      </div>
+    </p-dialog>
+  }
+</section>

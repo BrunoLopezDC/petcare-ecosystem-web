@@ -1,0 +1,72 @@
+<section class="dom-demo">
+  <header class="dom-demo__intro">
+    <h2 id="dom-demo-title" class="dom-demo__title">Manipulación directa del DOM</h2>
+    <p class="dom-demo__sub">
+      Esta pantalla usa las APIs nativas del navegador
+      (<code>document.createElement</code>, <code>querySelector</code>,
+      <code>classList</code>, <code>appendChild</code>, <code>remove</code>),
+      no los mecanismos de binding de Angular.
+    </p>
+  </header>
+
+  <div class="dom-demo__grid">
+    <div class="dom-demo__card dom-demo__action">
+      <i class="pi pi-pen-to-square dom-demo__action-icon"></i>
+      <div class="dom-demo__action-body">
+        <h3 class="dom-demo__action-title">Agregar nota</h3>
+        <p class="dom-demo__action-text">Crea una tarjeta de cuidado con datos de la lista.</p>
+      </div>
+      <button type="button" class="p-button p-component dom-demo__btn" (click)="addNote()">
+        Agregar nota
+      </button>
+    </div>
+
+    <div class="dom-demo__card dom-demo__action">
+      <i class="pi pi-palette dom-demo__action-icon"></i>
+      <div class="dom-demo__action-body">
+        <h3 class="dom-demo__action-title">Cambiar estilo</h3>
+        <p class="dom-demo__action-text">Alterna la clase de resaltado del título.</p>
+      </div>
+      <button type="button" class="p-button p-component dom-demo__btn" (click)="toggleStyle()">
+        Cambiar estilo
+      </button>
+    </div>
+
+    <div class="dom-demo__card dom-demo__action">
+      <i class="pi pi-clock dom-demo__action-icon"></i>
+      <div class="dom-demo__action-body">
+        <h3 class="dom-demo__action-title">Actualizar contenido</h3>
+        <p class="dom-demo__action-text">Reescribe el texto del reloj con el conteo actual.</p>
+      </div>
+      <button type="button" class="p-button p-component dom-demo__btn" (click)="updateContent()">
+        Actualizar contenido
+      </button>
+      <p id="dom-demo-clock" class="dom-demo__clock">Aún sin actualizaciones</p>
+    </div>
+
+    <div class="dom-demo__card dom-demo__action">
+      <i class="pi pi-trash dom-demo__action-icon"></i>
+      <div class="dom-demo__action-body">
+        <h3 class="dom-demo__action-title">Eliminar última nota</h3>
+        <p class="dom-demo__action-text">Quita la nota más reciente de la lista.</p>
+      </div>
+      <button
+        type="button"
+        class="p-button p-component p-button-danger dom-demo__btn dom-demo__btn--danger"
+        (click)="removeLastNote()"
+      >
+        Eliminar última nota
+      </button>
+    </div>
+  </div>
+
+  <div class="dom-demo__card dom-demo__notes">
+    <h3 class="dom-demo__notes-title">Notas creadas</h3>
+    <div
+      class="dom-demo__container"
+      #container
+      role="list"
+      aria-label="Notas de cuidado"
+    ></div>
+  </div>
+</section>

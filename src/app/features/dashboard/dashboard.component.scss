@@ -1,0 +1,192 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 1200px;
+}
+
+.dashboard__banner {
+  margin: 1rem 0 1.25rem 0;
+}
+
+.dashboard__loading {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0;
+}
+
+.dashboard__error {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.dashboard__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--p-text-muted-color);
+
+  .pi {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .dashboard__empty-title {
+    margin: 0;
+    font-size: 1.15rem;
+    color: var(--p-text-color);
+  }
+
+  .dashboard__empty-text {
+    margin: 0;
+  }
+}
+
+.dashboard__name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .pi {
+    color: var(--p-primary-color);
+  }
+}
+
+.dashboard__table-wrap {
+  :host-context(.app-main) & {
+    overflow-x: auto;
+  }
+}
+
+.dashboard__table-card {
+  .p-card-body {
+    padding: 1rem;
+  }
+}
+
+.dashboard__row {
+  /* El hover de filas lo provee el tema Aura vía [rowHover] (clase p-datatable-hoverable). */
+}
+
+/* Botón de tres puntos que abre el menú de acciones de la fila */
+.dashboard__row-menu-btn {
+  color: var(--p-text-muted-color, #64748b);
+}
+
+/* Cards view is hidden by default (desktop) */
+.dashboard__cards {
+  display: none;
+}
+
+.dashboard__cards-list {
+  display: none;
+}
+
+.dashboard__detail-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.5rem 1rem;
+  margin: 0;
+
+  dt {
+    font-weight: 600;
+    color: var(--p-text-muted-color);
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+.dashboard__dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+/* ---------- Responsive ---------- */
+
+/* Base layout (desktop, 768-1440px) is the default above. */
+
+/* Very small screens (wearable, <=480px): stacked cards, no wide columns */
+@media (max-width: 480px) {
+  .dashboard__table-wrap,
+  .dashboard__table-card {
+    display: none;
+  }
+
+  .dashboard__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .dashboard__card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: left;
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid var(--p-content-border-color);
+    border-radius: var(--p-content-border-radius);
+    background: var(--p-content-background);
+    color: var(--p-text-color);
+    cursor: pointer;
+  }
+
+  .dashboard__card-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+
+    .pi {
+      color: var(--p-primary-color);
+    }
+  }
+
+  .dashboard__card-field {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .dashboard__card-label {
+    color: var(--p-text-muted-color);
+    font-size: 0.85rem;
+  }
+
+  .dashboard__banner {
+    font-size: 0.9rem;
+  }
+}
+
+/* Large / TV screens (>=1920px): bigger readable type and spacing */
+@media (min-width: 1920px) {
+  .dashboard {
+    font-size: 1.25rem;
+    gap: 2rem;
+    max-width: 1700px;
+  }
+
+  .dashboard__detail-list {
+    gap: 0.75rem 1.5rem;
+    font-size: 1.2rem;
+  }
+
+  .dashboard__name {
+    .pi {
+      font-size: 1.3rem;
+    }
+  }
+
+  .dashboard__card {
+    font-size: 1.2rem;
+  }
+}

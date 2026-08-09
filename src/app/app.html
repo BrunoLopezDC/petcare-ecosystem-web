@@ -1,0 +1,24 @@
+<div class="app" [class.app--collapsed]="collapsed()">
+  <aside class="app-sidenav">
+    <div class="app-sidenav__brand">
+      <i class="pi pi-heart app-sidenav__logo"></i>
+      <span class="app-sidenav__name">{{ panelName() }}</span>
+    </div>
+
+    <p-panelmenu class="app-sidenav__menu" [model]="navItems()" />
+
+    <button
+      type="button"
+      class="app-sidenav__toggle"
+      aria-label="Colapsar o expandir menú"
+      [attr.aria-expanded]="collapsed() ? 'false' : 'true'"
+      (click)="toggleSidebar()"
+    >
+      <i [class]="collapsed() ? 'pi pi-angle-right' : 'pi pi-angle-left'"></i>
+    </button>
+  </aside>
+
+  <main class="app-main">
+    <router-outlet />
+  </main>
+</div>

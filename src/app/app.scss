@@ -1,0 +1,248 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+/* ---------- Shell general ---------- */
+
+.app {
+  display: flex;
+  height: 100%;
+  min-width: 0;
+}
+
+/* ---------- Sidebar oscuro ---------- */
+
+.app-sidenav {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 240px;
+  padding: 1.25rem 0.9rem;
+  background: #1a2332;
+  color: #e2e8f0;
+  transition: width 0.2s ease;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.app-sidenav__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0 0.5rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.app-sidenav__logo {
+  font-size: 1.5rem;
+  color: var(--p-primary-300, #6ee7b7);
+  flex-shrink: 0;
+}
+
+.app-sidenav__name {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #f1f5f9;
+}
+
+.app-sidenav__menu {
+  flex: 1;
+  margin-top: 1rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Estilos específicos del PanelMenu sobre el fondo oscuro.
+   El propio <p-panelmenu> aporta la estructura Y la lógica de navegación;
+   aquí solo se ajustan los colores para contraste sobre fondo oscuro. */
+.app-sidenav .p-panelmenu {
+  color: #cbd5e1;
+}
+
+.app-sidenav .p-panelmenu-panel {
+  background: transparent;
+  border: 0;
+  margin: 0 0 0.25rem;
+  box-shadow: none;
+}
+
+.app-sidenav .p-panelmenu-header-content {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.app-sidenav .p-panelmenu-header-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border-radius: 8px;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+.app-sidenav .p-panelmenu-header-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+}
+
+.app-sidenav .p-panelmenu-header-link.p-panelmenu-item-link-active,
+.app-sidenav .p-panelmenu-header-link.p-panelmenu-header-link-active {
+  background: #2d4a76;
+  color: #eaf2ff;
+  font-weight: 600;
+}
+
+.app-sidenav .p-panelmenu-header-icon {
+  color: inherit;
+  margin-right: 0;
+}
+
+/* Los ítems de navegación no tienen submenús: al activar un ítem PrimeNG
+   expande un contenedor vacío (--p-motion-height: 16px) que empuja el
+   layout. Se oculta para que el estado activo no cambie el tamaño de los
+   ítems. */
+.app-sidenav .p-panelmenu-content-container {
+  display: none;
+}
+
+.app-sidenav__toggle {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.14);
+    color: #f8fafc;
+  }
+}
+
+/* --- Sidebar colapsado (solo íconos) --- */
+
+.app--collapsed .app-sidenav {
+  width: 76px;
+  padding-left: 0.7rem;
+  padding-right: 0.7rem;
+}
+
+.app--collapsed .app-sidenav__brand {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.app--collapsed .app-sidenav__name,
+.app--collapsed .app-sidenav__menu .p-panelmenu-header-label {
+  display: none;
+}
+
+.app--collapsed .app-sidenav__menu .p-panelmenu-header-content,
+.app--collapsed .app-sidenav__menu .p-panelmenu-header-link {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.app--collapsed .app-sidenav__toggle {
+  width: 100%;
+}
+
+/* ---------- Área de contenido (fondo claro) ---------- */
+
+.app-main {
+  flex: 1;
+  min-width: 0;
+  padding: 1.5rem;
+  overflow: auto;
+  background: #f1f5f9;
+  color: var(--p-text-color, #1e293b);
+
+  /* El tema Aura solo entra cuando PrimeNG inyecta su CSS global (dashboard
+     primero). En carga fresca de una ruta sin él, el input se ve con el color
+     oscuro correcto leyendose el texto. Forzamos color de texto oscuro sobre
+     fondo claro en cualquier input real por robustez. */
+  input[type='text'] {
+    color: #1a1a1a;
+  }
+}
+
+/* ---------- Muy pequeño (wearable) ---------- */
+
+@media (max-width: 600px) {
+  .app {
+    flex-direction: column;
+  }
+
+  .app-sidenav {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem;
+  }
+
+  .app-sidenav__brand {
+    border-bottom: 0;
+    padding: 0 0.25rem;
+  }
+
+  .app-sidenav__name {
+    font-size: 0.9rem;
+  }
+
+  .app-sidenav__menu {
+    flex: 1;
+    margin-top: 0;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .app-sidenav__menu .p-panelmenu-panel {
+    margin: 0 0.25rem 0 0;
+  }
+
+  .app-sidenav .p-panelmenu-header-link {
+    padding: 0.55rem 0.7rem;
+    white-space: nowrap;
+  }
+
+  .app-sidenav__toggle {
+    margin-top: 0;
+    width: auto;
+    flex-shrink: 0;
+  }
+}
+
+/* ---------- Pantallas grandes (TV >=1920px) ---------- */
+
+@media (min-width: 1920px) {
+  :host {
+    font-size: 1.15rem;
+  }
+
+  .app-sidenav {
+    width: 280px;
+  }
+
+  .app-main {
+    padding: 2.5rem;
+  }
+}
