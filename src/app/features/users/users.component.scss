@@ -1,0 +1,144 @@
+.users {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.users__loading {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0;
+}
+
+.users__error {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.users__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--p-text-muted-color);
+
+  .pi {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .users__empty-title {
+    margin: 0;
+    font-size: 1.15rem;
+    color: var(--p-text-color);
+  }
+
+  .users__empty-text {
+    margin: 0;
+  }
+}
+
+.users__table-card {
+  .p-card-body {
+    padding: 1rem;
+  }
+}
+
+.users__table-wrap {
+  :host-context(.app-main) & {
+    overflow-x: auto;
+  }
+}
+
+.users__toolbar {
+  margin-bottom: 1rem;
+}
+
+.users__filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.users__filter-label {
+  font-size: 0.9rem;
+  color: var(--p-text-color);
+  cursor: pointer;
+  user-select: none;
+}
+
+.users__row {
+  /* Los perfiles eliminados (lógicamente) se ven atenuados. */
+  &.users__row--deleted {
+    opacity: 0.5;
+  }
+
+  /* La fila del usuario autenticado marca sus opciones restringidas. */
+  &.users__row--self .users__email {
+    font-weight: 600;
+  }
+}
+
+.users__email {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.users__self-tag {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: #e0f2fe;
+  color: #075985;
+  white-space: nowrap;
+}
+
+.users__row-menu-btn {
+  color: var(--p-text-muted-color, #64748b);
+}
+
+.users__dialog-text {
+  margin: 0 0 1rem;
+  color: var(--p-text-color);
+}
+
+.users__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.users__label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.users__select {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--p-content-border-color, #cbd5e1);
+  border-radius: var(--p-content-border-radius, 8px);
+  background: var(--p-content-background, #ffffff);
+  color: var(--p-text-color, #1a1a1a);
+  font-size: 0.95rem;
+
+  &:focus {
+    outline: none;
+    border-color: var(--p-primary-color, #059669);
+  }
+}
+
+.users__dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}

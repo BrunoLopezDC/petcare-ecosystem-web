@@ -1,0 +1,221 @@
+<section class="users">
+  @if (loading()) {
+    <div class="users__loading" role="status" aria-label="Cargando usuarios">
+      <p-progress-spinner class="w-4rem h-4rem" strokeWidth="4" />
+    </div>
+  } @else if (error()) {
+    <div class="users__error">
+      <p-message [text]="error()!" severity="error" styleClass="w-full" />
+      <div class="users__retry">
+        <p-button label="Reintentar" icon="pi pi-refresh" (onClick)="load()" />
+      </div>
+    </div>
+  } @else {
+    <p-card class="users__table-card">
+      <ng-template #content>
+        <div class="users__toolbar">
+          <div class="users__filter">
+            <p-checkbox
+              inputId="show-deleted"
+              [binary]="true"
+              [value]="showDeleted()"
+              (onChange)="showDeleted.set($event.checked)"
+            />
+            <label class="users__filter-label" for="show-deleted">
+              Mostrar eliminados
+            </label>
+          </div>
+        </div>
+
+        <div class="users__table-wrap">
+          <p-table
+            [value]="visibleUsers()"
+            dataKey="id"
+            [paginator]="visibleUsers().length > 10"
+            [rows]="10"
+            [showCurrentPageReport]="true"
+            [rowHover]="true"
+            [tableStyle]="{ 'min-width': '52rem' }"
+            styleClass="p-datatable-striped"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Correo</th>
+                <th>Nombre completo</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th>Creado el</th>
+                <th>Acciones</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+              <tr
+                class="users__row"
+                [class.users__row--deleted]="isDeleted(row)"
+                [class.users__row--self]="isSelf(row)"
+              >
+                <td>
+                  <span class="users__email">{{ row.email ?? '—' }}</span>
+                  @if (isSelf(row)) {
+                    <span class="users__self-tag">tú</span>
+                  }
+                </td>
+                <td>{{ row.full_name ?? '—' }}</td>
+                <td>
+                  <p-tag
+                    [value]="row.role === 'admin' ? 'Admin' : 'Usuario'"
+                    [severity]="row.role === 'admin' ? 'info' : 'secondary'"
+                  />
+                </td>
+                <td>
+                  @if (isDeleted(row)) {
+                    <p-tag value="Eliminado" severity="contrast" />
+                  } @else {
+                    <p-tag
+                      [value]="row.active ? 'Activo' : 'Inactivo'"
+                      [severity]="row.active ? 'success' : 'danger'"
+                    />
+                  }
+                </td>
+                <td>{{ formatDate(row.created_at) }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="p-button p-component p-button-text p-button-icon-only users__row-menu-btn"
+                    [attr.aria-label]="'Acciones de ' + (row.email ?? 'usuario')"
+                    (click)="openRowMenu($event, row)"
+                  >
+                    <i class="pi pi-ellipsis-v"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <div class="users__empty">
+                <i class="pi pi-users"></i>
+                <h2 class="users__empty-title">No hay usuarios que mostrar</h2>
+                <p class="users__empty-text">
+                  @if (showDeleted()) {
+                    No existe ningún perfil en el sistema.
+                  } @else {
+                    Todos los perfiles fueron eliminados. Activa &laquo;Mostrar eliminados&raquo; para verlos.
+                  }
+                </p>
+              </div>
+            </ng-template>
+          </p-table>
+        </div>
+      </ng-template>
+    </p-card>
+
+    <!-- Menú de acciones por fila -->
+    <p-menu #rowMenu popup [model]="rowActionItems()" />
+
+    <!-- Diálogo: cambiar rol -->
+    <p-dialog
+      [(visible)]="roleDialog().visible"
+      header="Cambiar rol"
+      [closable]="false"
+      [modal]="true"
+      [draggable]="false"
+      [resizable]="false"
+      styleClass="users__dialog"
+    >
+      @if (roleDialog().user; as user) {
+        <p class="users__dialog-text">
+          Nuevo rol para <strong>{{ user.email }}</strong>
+        </p>
+        <div class="users__field">
+          <label class="users__label" for="role-select">Rol</label>
+          <select
+            id="role-select"
+            class="users__select"
+            [value]="roleDialog().role"
+            (change)="onRoleChange($any($event.target).value)"
+          >
+            <option value="admin">Admin</option>
+            <option value="user">Usuario</option>
+          </select>
+        </div>
+
+        @if (saving()) {
+          <p-message severity="info" text="Guardando…" styleClass="w-full" />
+        }
+
+        <div class="users__dialog-actions">
+          <p-button label="Cancelar" severity="secondary" (onClick)="cancelRoleChange()" />
+          <p-button label="Guardar" icon="pi pi-check" [loading]="saving()" (onClick)="confirmRoleChange()" />
+        </div>
+      }
+    </p-dialog>
+
+    <!-- Diálogo: activar / desactivar -->
+    <p-dialog
+      [(visible)]="toggleDialog().visible"
+      [header]="toggleDialog().user?.active ? 'Desactivar cuenta' : 'Activar cuenta'"
+      [closable]="false"
+      [modal]="true"
+      [draggable]="false"
+      [resizable]="false"
+      styleClass="users__dialog"
+    >
+      @if (toggleDialog().user; as user) {
+        <p class="users__dialog-text">
+          @if (user.active) {
+            ¿Desactivar la cuenta de <strong>{{ user.email }}</strong>? No podrá iniciar sesión hasta que se reactive.
+          } @else {
+            ¿Activar la cuenta de <strong>{{ user.email }}</strong>? Volverá a poder iniciar sesión.
+          }
+        </p>
+
+        @if (saving()) {
+          <p-message severity="info" text="Guardando…" styleClass="w-full" />
+        }
+
+        <div class="users__dialog-actions">
+          <p-button label="Cancelar" severity="secondary" (onClick)="cancelToggle()" />
+          <p-button
+            label="Confirmar"
+            icon="pi pi-check"
+            [severity]="user.active ? 'danger' : 'success'"
+            [loading]="saving()"
+            (onClick)="confirmToggle()"
+          />
+        </div>
+      }
+    </p-dialog>
+
+    <!-- Diálogo: eliminar (lógica) -->
+    <p-dialog
+      [(visible)]="deleteDialog().visible"
+      header="Eliminar cuenta"
+      [closable]="false"
+      [modal]="true"
+      [draggable]="false"
+      [resizable]="false"
+      styleClass="users__dialog"
+    >
+      @if (deleteDialog().user; as user) {
+        <p class="users__dialog-text">
+          ¿Eliminar la cuenta de <strong>{{ user.email }}</strong>? Esta acción <strong>no borra</strong> los datos
+          de forma permanente: desactiva la cuenta y la oculta de la lista. Podrás recuperarla si hace falta.
+        </p>
+
+        @if (saving()) {
+          <p-message severity="info" text="Eliminando…" styleClass="w-full" />
+        }
+
+        <div class="users__dialog-actions">
+          <p-button label="Cancelar" severity="secondary" (onClick)="cancelDelete()" />
+          <p-button
+            label="Eliminar"
+            icon="pi pi-trash"
+            severity="danger"
+            [loading]="saving()"
+            (onClick)="confirmDelete()"
+          />
+        </div>
+      }
+    </p-dialog>
+  }
+</section>

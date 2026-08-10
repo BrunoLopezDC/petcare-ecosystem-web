@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { ViewEncapsulation } from '@angular/core';
 import { PanelMenu } from 'primeng/panelmenu';
@@ -6,6 +6,7 @@ import { MenuItem } from 'primeng/api';
 import { filter } from 'rxjs';
 
 import { getSupabaseClient } from './core/supabase/supabase.client';
+import { ProfileService } from './core/services/profile.service';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +21,7 @@ import { getSupabaseClient } from './core/supabase/supabase.client';
 })
 export class App {
   private readonly router = inject(Router);
+  private readonly profileService = inject(ProfileService);
 
   protected readonly panelName = signal('Panel de Mascotas');
   protected readonly collapsed = signal(false);
@@ -34,12 +36,20 @@ export class App {
 
   // Modelo de datos que espera <p-panelmenu>. El estado activo lo marca el
   // propio componente con routerLinkActive (coincidencia exacta por ruta).
-  protected readonly navItems = signal<MenuItem[]>([
-    { label: 'Mascotas', icon: 'pi pi-user', routerLink: '/', routerLinkActiveOptions: { exact: true } },
-    { label: 'Interactividad', icon: 'pi pi-code', routerLink: '/dom-demo', routerLinkActiveOptions: { exact: true } },
-    { label: 'Tareas', icon: 'pi pi-check-square', routerLink: '/tareas', routerLinkActiveOptions: { exact: true } },
-    { label: 'Mi perfil', icon: 'pi pi-user-edit', routerLink: '/perfil', routerLinkActiveOptions: { exact: true } }
-  ]);
+  // El ítem "Usuarios" solo se muestra para administradores: para un rol
+  // 'user' no aparece en absoluto (no es un simple deshabilitado).
+  protected readonly navItems = computed<MenuItem[]>(() => {
+    const items: MenuItem[] = [
+      { label: 'Mascotas', icon: 'pi pi-user', routerLink: '/', routerLinkActiveOptions: { exact: true } },
+      { label: 'Interactividad', icon: 'pi pi-code', routerLink: '/dom-demo', routerLinkActiveOptions: { exact: true } },
+      { label: 'Tareas', icon: 'pi pi-check-square', routerLink: '/tareas', routerLinkActiveOptions: { exact: true } },
+      { label: 'Mi perfil', icon: 'pi pi-user-edit', routerLink: '/perfil', routerLinkActiveOptions: { exact: true } }
+    ];
+    if (this.profileService.current()?.role === 'admin') {
+      items.push({ label: 'Usuarios', icon: 'pi pi-users', routerLink: '/usuarios', routerLinkActiveOptions: { exact: true } });
+    }
+    return items;
+  });
 
   toggleSidebar(): void {
     this.collapsed.update((value) => !value);

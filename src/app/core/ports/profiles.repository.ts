@@ -8,4 +8,19 @@ export abstract class ProfilesRepository {
 
   /** Actualiza la fila propia del usuario en profiles (solo su propio id). */
   abstract updateMine(changes: Partial<Profile>): Observable<Profile | null>;
+
+  /**
+   * Trae todos los perfiles. Solo tiene éxito si quien llama es admin
+   * (la política RLS is_admin() ya está en Supabase).
+   */
+  abstract listAll(): Observable<Profile[]>;
+
+  /** Cambia el rol de un usuario. Solo funciona si quien ejecuta es admin. */
+  abstract updateRole(userId: string, newRole: string): Observable<Profile | null>;
+
+  /** Activa o desactiva una cuenta. Solo funciona si quien ejecuta es admin. */
+  abstract toggleActive(userId: string, active: boolean): Observable<Profile | null>;
+
+  /** Eliminación lógica: deleted_at=now() y active=false (no borra la fila). */
+  abstract softDelete(userId: string): Observable<Profile | null>;
 }
