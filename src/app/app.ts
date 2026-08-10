@@ -7,6 +7,7 @@ import { filter } from 'rxjs';
 
 import { getSupabaseClient } from './core/supabase/supabase.client';
 import { ProfileService } from './core/services/profile.service';
+import { SupabaseAuditLogRepository } from './infrastructure/supabase-audit-log.repository';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +23,7 @@ import { ProfileService } from './core/services/profile.service';
 export class App {
   private readonly router = inject(Router);
   private readonly profileService = inject(ProfileService);
+  private readonly auditRepository = inject(SupabaseAuditLogRepository);
 
   protected readonly panelName = signal('Panel de Mascotas');
   protected readonly collapsed = signal(false);
@@ -47,6 +49,7 @@ export class App {
     ];
     if (this.profileService.current()?.role === 'admin') {
       items.push({ label: 'Usuarios', icon: 'pi pi-users', routerLink: '/usuarios', routerLinkActiveOptions: { exact: true } });
+      items.push({ label: 'Auditoría', icon: 'pi pi-history', routerLink: '/auditoria', routerLinkActiveOptions: { exact: true } });
     }
     return items;
   });
@@ -56,6 +59,10 @@ export class App {
   }
 
   logout(): void {
+    // El evento logout se registra ANTES de cerrar la sesión: el adaptador
+    // lee user_id/email de la sesión vigente. Es best-effort: si falla, el
+    // cierre de sesión continúa igual (solo se registra en consola).
+    this.auditRepository.insert('logout').subscribe();
     getSupabaseClient().auth.signOut().finally(() => {
       this.router.navigateByUrl('/login');
     });

@@ -1,0 +1,145 @@
+<section class="audit">
+  @if (loading()) {
+    <div class="audit__loading" role="status" aria-label="Cargando auditoría">
+      <p-progress-spinner class="w-4rem h-4rem" strokeWidth="4" />
+    </div>
+  } @else if (error()) {
+    <div class="audit__error">
+      <p-message [text]="error()!" severity="error" styleClass="w-full" />
+      <div class="audit__retry">
+        <p-button label="Reintentar" icon="pi pi-refresh" (onClick)="load()" />
+      </div>
+    </div>
+  } @else {
+    <p-card class="audit__table-card">
+      <ng-template #content>
+        <div class="audit__toolbar">
+          <p-iconField class="audit__search">
+            <p-inputIcon class="pi pi-search" />
+            <input
+              pInputText
+              type="text"
+              placeholder="Buscar por correo..."
+              (input)="onSearchChange(tableRef, $any($event.target).value)"
+            />
+          </p-iconField>
+
+          <div class="audit__filter">
+            <label class="audit__filter-label" for="action-filter">Acción</label>
+            <select
+              id="action-filter"
+              class="audit__select"
+              [value]="actionFilter() ?? ''"
+              (change)="onActionFilterChange($any($event.target).value)"
+            >
+              <option value="">Todas</option>
+              @for (option of actionOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <div class="audit__table-wrap">
+          <p-table
+            #tableRef
+            [value]="visibleLogs()"
+            [globalFilterFields]="['email']"
+            dataKey="id"
+            [paginator]="visibleLogs().length > 10"
+            [rows]="10"
+            [showCurrentPageReport]="true"
+            [rowHover]="true"
+            [tableStyle]="{ 'min-width': '48rem' }"
+            styleClass="p-datatable-striped"
+          >
+            <ng-template pTemplate="columns" let-columns>
+              <tr>
+                <th>Fecha y hora</th>
+                <th>Correo</th>
+                <th>Acción</th>
+                <th>Dirección IP</th>
+                <th>Detalles</th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-row>
+              <tr class="audit__row">
+                <td>{{ formatDateTime(row.created_at) }}</td>
+                <td>{{ row.email ?? '—' }}</td>
+                <td>
+                  <p-tag [value]="actionLabel(row.action)" [severity]="actionSeverity(row.action)" />
+                </td>
+                <td>{{ ipText(row) }}</td>
+                <td>
+                  @if (hasDetails(row)) {
+                    <p-button
+                      label="Ver JSON"
+                      icon="pi pi-code"
+                      size="small"
+                      severity="secondary"
+                      (onClick)="openDetail(row)"
+                    />
+                  } @else {
+                    <span class="audit__no-details">—</span>
+                  }
+                </td>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+              <div class="audit__empty">
+                <i class="pi pi-history"></i>
+                <h2 class="audit__empty-title">Sin registros para mostrar</h2>
+                <p class="audit__empty-text">
+                  @if (hasSearchFilter() || actionFilter()) {
+                    No hay eventos que coincidan con los filtros seleccionados.
+                  } @else {
+                    Todavía no hay eventos de auditoría registrados.
+                  }
+                </p>
+              </div>
+            </ng-template>
+          </p-table>
+        </div>
+      </ng-template>
+    </p-card>
+
+    <p-dialog
+      [(visible)]="dialogVisible"
+      header="Detalles del evento"
+      [closable]="false"
+      [modal]="true"
+      [draggable]="false"
+      [resizable]="false"
+      styleClass="audit__detail"
+    >
+      @if (detailLog(); as log) {
+        <dl class="audit__detail-list">
+          <div>
+            <dt>Fecha y hora</dt>
+            <dd>{{ formatDateTime(log.created_at) }}</dd>
+          </div>
+          <div>
+            <dt>Correo</dt>
+            <dd>{{ log.email ?? '—' }}</dd>
+          </div>
+          <div>
+            <dt>Acción</dt>
+            <dd>
+              <p-tag [value]="actionLabel(log.action)" [severity]="actionSeverity(log.action)" />
+            </dd>
+          </div>
+          <div>
+            <dt>Dirección IP</dt>
+            <dd>{{ ipText(log) }}</dd>
+          </div>
+        </dl>
+        <pre class="audit__json">{{ detailsJson(log) }}</pre>
+      }
+      <div class="audit__dialog-actions">
+        <p-button label="Cerrar" (onClick)="closeDetail()" />
+      </div>
+    </p-dialog>
+  }
+</section>

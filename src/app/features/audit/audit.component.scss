@@ -1,0 +1,133 @@
+.audit {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.audit__loading {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0;
+}
+
+.audit__error {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.audit__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--p-text-muted-color);
+
+  .pi {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .audit__empty-title {
+    margin: 0;
+    font-size: 1.15rem;
+    color: var(--p-text-color);
+  }
+
+  .audit__empty-text {
+    margin: 0;
+  }
+}
+
+.audit__table-card {
+  .p-card-body {
+    padding: 1rem;
+  }
+}
+
+.audit__table-wrap {
+  :host-context(.app-main) & {
+    overflow-x: auto;
+  }
+}
+
+.audit__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+  margin-bottom: 1rem;
+}
+
+.audit__search {
+  flex: 1;
+  min-width: 14rem;
+}
+
+.audit__filter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.audit__filter-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.audit__select {
+  min-width: 12rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--p-content-border-color, #cbd5e1);
+  border-radius: var(--p-content-border-radius, 8px);
+  background: var(--p-content-background, #ffffff);
+  color: var(--p-text-color, #1a1a1a);
+  font-size: 0.95rem;
+
+  &:focus {
+    outline: none;
+    border-color: var(--p-primary-color, #059669);
+  }
+}
+
+.audit__no-details {
+  color: var(--p-text-muted-color);
+}
+
+.audit__detail-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.5rem 1rem;
+  margin: 0 0 1rem;
+
+  dt {
+    font-weight: 600;
+    color: var(--p-text-muted-color);
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+.audit__json {
+  margin: 0;
+  padding: 1rem;
+  background: #0f172a;
+  color: #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  max-height: 24rem;
+  overflow-y: auto;
+}
+
+.audit__dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}

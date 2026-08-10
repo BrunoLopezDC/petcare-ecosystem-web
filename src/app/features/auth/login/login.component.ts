@@ -1,6 +1,6 @@
 import { Component, inject, signal, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { from, map, Observable } from 'rxjs';
+import { from, map, Observable, Subscription } from 'rxjs';
 import { Session } from '@supabase/supabase-js';
 
 import { InputTextModule } from 'primeng/inputtext';
@@ -10,6 +10,8 @@ import { MessageModule } from 'primeng/message';
 import { Password } from 'primeng/password';
 
 import { getSupabaseClient } from '../../../core/supabase/supabase.client';
+import { SupabaseAuditLogRepository } from '../../../infrastructure/supabase-audit-log.repository';
+import { ClientIpService } from '../../../core/services/client-ip.service';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +22,10 @@ import { getSupabaseClient } from '../../../core/supabase/supabase.client';
 })
 export class LoginComponent {
   private readonly router = inject(Router);
+  private readonly auditRepository = inject(SupabaseAuditLogRepository);
+  private readonly clientIpService = inject(ClientIpService);
+
+  private readonly subscription = new Subscription();
 
   protected readonly submitting = signal(false);
   protected readonly error = signal<string | null>(null);
@@ -58,12 +64,21 @@ export class LoginComponent {
           this.error.set('Correo o contraseña incorrectos');
           return;
         }
+        this.recordLogin();
         this.router.navigateByUrl('/');
       },
       error: () => {
         this.submitting.set(false);
         this.error.set('Correo o contraseña incorrectos');
       }
+    });
+  }
+
+  /** Registra el evento de auditoría 'login' con IP best-effort, sin bloquear
+   *  la navegación: si el insert falla, solo se avisa por consola. */
+  private recordLogin(): void {
+    this.clientIpService.getPublicIp().then((ip) => {
+      this.subscription.add(this.auditRepository.insert('login', undefined, ip).subscribe());
     });
   }
 

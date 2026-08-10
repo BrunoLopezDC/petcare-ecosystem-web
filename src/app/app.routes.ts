@@ -40,6 +40,12 @@ export const routes: Routes = [
       import('./features/users/users.component').then((m) => m.UsersComponent)
   },
   {
+    path: 'auditoria',
+    canActivate: [authGuard, adminGuard],
+    loadComponent: () =>
+      import('./features/audit/audit.component').then((m) => m.AuditComponent)
+  },
+  {
     path: '**',
     redirectTo: ''
   }

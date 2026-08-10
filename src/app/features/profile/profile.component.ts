@@ -9,6 +9,7 @@ import { Password } from 'primeng/password';
 
 import { ProfileService } from '../../core/services/profile.service';
 import { SupabaseProfilesRepository } from '../../infrastructure/supabase-profiles.repository';
+import { SupabaseAuditLogRepository } from '../../infrastructure/supabase-audit-log.repository';
 import { getSupabaseClient } from '../../core/supabase/supabase.client';
 
 @Component({
@@ -21,6 +22,7 @@ import { getSupabaseClient } from '../../core/supabase/supabase.client';
 export class ProfileComponent {
   private readonly profileService = inject(ProfileService);
   private readonly repository = inject(SupabaseProfilesRepository);
+  private readonly auditRepository = inject(SupabaseAuditLogRepository);
 
   protected readonly current = this.profileService.current;
   protected readonly loading = this.profileService.loading;
@@ -99,6 +101,9 @@ export class ProfileComponent {
         if (this.confirmPasswordInput) {
           this.confirmPasswordInput.value = '';
         }
+        // Auditoría best-effort: si el insert falla, el usuario no se entera
+        // (solo se registra en consola) y el cambio de contraseña prevalece.
+        this.auditRepository.insert('password_change').subscribe();
       },
       error: () => {
         this.savingPassword.set(false);
