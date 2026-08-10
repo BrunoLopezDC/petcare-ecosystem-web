@@ -1,21 +1,23 @@
 import { Component, inject, signal, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { from } from 'rxjs';
 
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
-import { Password } from 'primeng/password';
 
 import { ProfileService } from '../../core/services/profile.service';
 import { SupabaseProfilesRepository } from '../../infrastructure/supabase-profiles.repository';
 import { SupabaseAuditLogRepository } from '../../infrastructure/supabase-audit-log.repository';
 import { getSupabaseClient } from '../../core/supabase/supabase.client';
+import { passwordPolicyValidator, passwordRules, PasswordRule } from '../../core/validators/password-policy.validator';
+import { mustMatchValidator } from '../../core/validators/must-match.validator';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [InputTextModule, PasswordModule, ButtonModule, MessageModule],
+  imports: [ReactiveFormsModule, InputTextModule, PasswordModule, ButtonModule, MessageModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
@@ -34,9 +36,31 @@ export class ProfileComponent {
   protected readonly nameError = signal<boolean>(false);
   protected readonly passwordError = signal<boolean>(false);
 
+  /** Requisitos de la política de contraseña con su estado, para el checklist. */
+  protected readonly passwordRequirements = signal<PasswordRule[]>(passwordRules(''));
+
+  /** Formulario reactivo de cambio de contraseña (política + confirmación). */
+  protected readonly passwordForm = new FormGroup(
+    {
+      newPassword: new FormControl('', [Validators.required, passwordPolicyValidator()]),
+      confirmPassword: new FormControl('', [Validators.required])
+    },
+    { validators: mustMatchValidator('newPassword', 'confirmPassword') }
+  );
+
   @ViewChild('nameInput') protected nameInput?: { nativeElement: HTMLInputElement };
-  @ViewChild('newPasswordInput') protected newPasswordInput?: Password;
-  @ViewChild('confirmPasswordInput') protected confirmPasswordInput?: Password;
+
+  constructor() {
+    // El checklist se actualiza en tiempo real conforme se escribe.
+    this.passwordForm.controls.newPassword.valueChanges.subscribe((value) => {
+      this.passwordRequirements.set(passwordRules(value ?? ''));
+    });
+    // Estado inicial de la confirmación: si un valor ya escrito cambia y deja
+    // de coincidir, el validador del grupo marca mustMatch en el momento.
+    this.passwordForm.controls.confirmPassword.valueChanges.subscribe(() => {
+      this.passwordForm.controls.confirmPassword.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+    });
+  }
 
   saveName(event?: Event): void {
     event?.preventDefault();
@@ -69,22 +93,11 @@ export class ProfileComponent {
 
   savePassword(event?: Event): void {
     event?.preventDefault();
-    if (this.savingPassword()) {
+    if (this.savingPassword() || this.passwordForm.invalid) {
       return;
     }
-    const newPassword = this.newPasswordInput?.value ?? '';
-    const confirmation = this.confirmPasswordInput?.value ?? '';
-    if (newPassword.length < 8) {
-      this.passwordFeedback.set('La contraseña debe tener al menos 8 caracteres.');
-      this.passwordError.set(true);
-      return;
-    }
-    if (newPassword !== confirmation) {
-      this.passwordFeedback.set('Las contraseñas no coinciden.');
-      this.passwordError.set(true);
-      return;
-    }
-    this.passwordError.set(false);
+    const newPassword = this.passwordForm.controls.newPassword.value ?? '';
+    const confirmation = this.passwordForm.controls.confirmPassword.value ?? '';
     this.savingPassword.set(true);
     from(getSupabaseClient().auth.updateUser({ password: newPassword })).subscribe({
       next: ({ error }) => {
@@ -95,12 +108,9 @@ export class ProfileComponent {
           return;
         }
         this.passwordFeedback.set('Contraseña actualizada.');
-        if (this.newPasswordInput) {
-          this.newPasswordInput.value = '';
-        }
-        if (this.confirmPasswordInput) {
-          this.confirmPasswordInput.value = '';
-        }
+        this.passwordError.set(false);
+        this.passwordForm.reset();
+        this.passwordRequirements.set(passwordRules(''));
         // Auditoría best-effort: si el insert falla, el usuario no se entera
         // (solo se registra en consola) y el cambio de contraseña prevalece.
         this.auditRepository.insert('password_change').subscribe();

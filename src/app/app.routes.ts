@@ -46,6 +46,12 @@ export const routes: Routes = [
       import('./features/audit/audit.component').then((m) => m.AuditComponent)
   },
   {
+    path: 'roles-permisos',
+    canActivate: [authGuard, adminGuard],
+    loadComponent: () =>
+      import('./features/roles-permissions/roles-permissions.component').then((m) => m.RolesPermissionsComponent)
+  },
+  {
     path: '**',
     redirectTo: ''
   }

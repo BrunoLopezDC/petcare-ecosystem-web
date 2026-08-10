@@ -112,6 +112,38 @@
   width: 100%;
 }
 
+/* ---------- Checklist de requisitos de contraseña ---------- */
+
+.profile__requirements {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.profile__requirement {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #991b1b;
+
+  .pi {
+    font-size: 0.75rem;
+    color: #dc2626;
+  }
+}
+
+.profile__requirement--ok {
+  color: #065f46;
+
+  .pi {
+    color: #059669;
+  }
+}
+
 .profile__submit {
   align-self: flex-start;
 }

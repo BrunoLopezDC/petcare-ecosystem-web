@@ -32,3 +32,20 @@
     <router-outlet />
   </main>
 </div>
+
+@if (sessionTimeout.warningVisible()) {
+  <div class="session-timeout-modal" role="dialog" aria-modal="true" aria-labelledby="session-timeout-title">
+    <div class="session-timeout-modal__card">
+      <div class="session-timeout-modal__icon"><i class="pi pi-clock" aria-hidden="true"></i></div>
+      <h2 id="session-timeout-title" class="session-timeout-modal__title">Tu sesión está por expirar</h2>
+      <p class="session-timeout-modal__message">
+        Llevas un tiempo sin actividad. Tu sesión cerrará en menos de un minuto.
+        Pulsa “Seguir conectado” para continuar trabajando.
+      </p>
+      <button type="button" class="session-timeout-modal__button" (click)="sessionTimeout.keepAlive()">
+        <i class="pi pi-user" aria-hidden="true"></i>
+        Seguir conectado
+      </button>
+    </div>
+  </div>
+}

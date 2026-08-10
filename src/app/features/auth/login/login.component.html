@@ -23,12 +23,12 @@
         <p class="login__subtitle">Ingresa tus credenciales para acceder al sistema</p>
       </header>
 
-      <form class="login__form" (submit)="login($event)">
+      <form class="login__form" (submit)="login($event)" [formGroup]="form">
         <div class="login__field">
           <label class="login__label" for="login-email">Correo electrónico</label>
           <input
-            #emailInput
             pInputText
+            formControlName="email"
             id="login-email"
             type="email"
             class="login__input"
@@ -42,7 +42,7 @@
         <div class="login__field">
           <label class="login__label" for="login-password">Contraseña</label>
           <p-password
-            #passwordInput
+            formControlName="password"
             id="login-password"
             class="login__password"
             inputId="login-password-input"
@@ -54,6 +54,15 @@
             name="password"
           />
         </div>
+
+        @if (info(); as message) {
+          <p-message
+            class="login__info"
+            severity="info"
+            [text]="message"
+            styleClass="w-full"
+          />
+        }
 
         @if (error(); as message) {
           <p-message
@@ -70,6 +79,7 @@
           label="Iniciar sesión"
           icon="pi pi-arrow-right"
           iconPos="right"
+          [disabled]="form.invalid || submitting()"
           [loading]="submitting()"
           styleClass="login__submit-btn"
         />

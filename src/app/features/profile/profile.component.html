@@ -63,12 +63,12 @@
       <!-- Cambiar contraseña -->
       <div class="profile__card">
         <h2 class="profile__card-title">Cambiar contraseña</h2>
-        <form class="profile__form" (submit)="savePassword($event)">
+        <form class="profile__form" (submit)="savePassword($event)" [formGroup]="passwordForm">
           <div class="profile__field">
             <label class="profile__label" for="new_password">Nueva contraseña</label>
             <p-password
-              #newPasswordInput
               id="new_password"
+              formControlName="newPassword"
               inputId="new_password-input"
               inputStyleClass="profile__input"
               class="profile__password"
@@ -76,13 +76,30 @@
               [toggleMask]="true"
               autocomplete="new-password"
             />
+
+            <ul class="profile__requirements" aria-label="Requisitos de la contraseña">
+              @for (requirement of passwordRequirements(); track requirement.key) {
+                <li
+                  class="profile__requirement"
+                  [class.profile__requirement--ok]="requirement.ok"
+                >
+                  <i
+                    class="pi"
+                    [class.pi-check]="requirement.ok"
+                    [class.pi-times]="!requirement.ok"
+                    aria-hidden="true"
+                  ></i>
+                  <span class="profile__requirement-label">{{ requirement.label }}</span>
+                </li>
+              }
+            </ul>
           </div>
 
           <div class="profile__field">
             <label class="profile__label" for="confirm_password">Confirmar contraseña</label>
             <p-password
-              #confirmPasswordInput
               id="confirm_password"
+              formControlName="confirmPassword"
               inputId="confirm-password-input"
               inputStyleClass="profile__input"
               class="profile__password"
@@ -91,6 +108,10 @@
               autocomplete="new-password"
             />
           </div>
+
+          @if (passwordForm.hasError('mustMatch')) {
+            <p-message severity="error" text="Las contraseñas no coinciden." />
+          }
 
           @if (passwordFeedback()) {
             <p-message
@@ -103,8 +124,9 @@
             type="submit"
             label="Cambiar contraseña"
             icon="pi pi-lock"
+            [disabled]="passwordForm.invalid || savingPassword()"
             [loading]="savingPassword()"
-            styleClass="profile__submit"
+            styleClass="profile__submit profile__submit--password"
           />
         </form>
       </div>

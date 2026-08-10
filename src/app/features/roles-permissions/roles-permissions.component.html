@@ -1,0 +1,64 @@
+<section class="roles-perm">
+  @if (loading()) {
+    <div class="roles-perm__loading" role="status" aria-label="Cargando permisos">
+      <p-progress-spinner class="w-4rem h-4rem" strokeWidth="4" />
+    </div>
+  } @else if (error()) {
+    <div class="roles-perm__error">
+      <p-message [text]="error()!" severity="error" styleClass="w-full" />
+      <div class="roles-perm__error-actions">
+        <p-button label="Reintentar" icon="pi pi-refresh" (onClick)="load()" />
+      </div>
+    </div>
+  } @else {
+    <p-card class="roles-perm__card">
+      <ng-template #content>
+        <div class="roles-perm__intro">
+          <p>
+            Esta matriz es el <strong>catálogo de referencia</strong> de permisos por rol que se usa en el sistema.
+            Fíjate que las decisiones de acceso hoy se basan en el campo <code>role</code> del perfil de cada usuario
+            (vía los guards de Angular), no en consultas dinámicas a esta tabla en cada acción. Editar esta matriz
+            actualiza el catálogo, pero no el comportamiento real de los guardias ni de la base de datos.
+          </p>
+        </div>
+
+        <div class="roles-perm__table-wrap">
+          <table class="roles-perm__matrix">
+            <thead>
+              <tr>
+                <th scope="col">Permiso</th>
+                @for (role of roles; track role.key) {
+                  <th scope="col" class="roles-perm__role-cell">{{ role.label }}</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (permission of permissions(); track permission.key) {
+                <tr>
+                  <td class="roles-perm__permission-cell">
+                    <code class="roles-perm__key">{{ permission.key }}</code>
+                    @if (permission.description) {
+                      <p class="roles-perm__desc">{{ permission.description }}</p>
+                    }
+                  </td>
+                  @for (role of roles; track role.key) {
+                    <td class="roles-perm__role-cell">
+                      <p-checkbox
+                        [inputId]="role.key + '-' + permission.key"
+                        [binary]="true"
+                        [ngModel]="has(role.key, permission.key)"
+                        [disabled]="isSaving(role.key, permission.key)"
+                        [ariaLabel]="role.label + ': ' + permission.key"
+                        (ngModelChange)="onToggle(role.key, permission, $event)"
+                      />
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </ng-template>
+    </p-card>
+  }
+</section>

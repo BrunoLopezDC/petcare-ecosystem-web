@@ -8,6 +8,7 @@ import { filter } from 'rxjs';
 import { getSupabaseClient } from './core/supabase/supabase.client';
 import { ProfileService } from './core/services/profile.service';
 import { SupabaseAuditLogRepository } from './infrastructure/supabase-audit-log.repository';
+import { SessionTimeoutService } from './core/services/session-timeout.service';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +25,8 @@ export class App {
   private readonly router = inject(Router);
   private readonly profileService = inject(ProfileService);
   private readonly auditRepository = inject(SupabaseAuditLogRepository);
+  /** Arranca/para el countdown de inactividad según la sesión y la ruta. */
+  protected readonly sessionTimeout = inject(SessionTimeoutService);
 
   protected readonly panelName = signal('Panel de Mascotas');
   protected readonly collapsed = signal(false);
@@ -50,6 +53,7 @@ export class App {
     if (this.profileService.current()?.role === 'admin') {
       items.push({ label: 'Usuarios', icon: 'pi pi-users', routerLink: '/usuarios', routerLinkActiveOptions: { exact: true } });
       items.push({ label: 'Auditoría', icon: 'pi pi-history', routerLink: '/auditoria', routerLinkActiveOptions: { exact: true } });
+      items.push({ label: 'Roles y Permisos', icon: 'pi pi-lock', routerLink: '/roles-permisos', routerLinkActiveOptions: { exact: true } });
     }
     return items;
   });
