@@ -1,0 +1,182 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.login {
+  display: flex;
+  height: 100%;
+  min-height: 100vh;
+  background: #ffffff;
+}
+
+/* ---------- Columna izquierda (degradado azul marino) ---------- */
+
+.login__aside {
+  flex: 0 0 40%;
+  max-width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2rem 2.5rem;
+  background: linear-gradient(180deg, #101826 0%, #1a2332 55%, #24344a 100%);
+  color: #f1f5f9;
+}
+
+.login__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.login__brand-logo {
+  font-size: 1.5rem;
+  color: var(--p-primary-300, #6ee7b7);
+}
+
+.login__brand-name {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #f1f5f9;
+}
+
+.login__aside-body {
+  max-width: 30rem;
+}
+
+.login__headline {
+  margin: 0;
+  font-size: clamp(1.6rem, 2.4vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.25;
+  color: #ffffff;
+}
+
+.login__tagline {
+  margin: 1rem 0 0;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #b7c3d2;
+}
+
+.login__aside-footer {
+  font-size: 0.8rem;
+  color: #8494a8;
+}
+
+/* ---------- Columna derecha (formulario) ---------- */
+
+.login__panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: #ffffff;
+}
+
+.login__form-wrap {
+  width: 100%;
+  max-width: 26rem;
+}
+
+.login__header {
+  margin-bottom: 1.75rem;
+}
+
+.login__title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.login__subtitle {
+  margin: 0.4rem 0 0;
+  color: #64748b;
+}
+
+.login__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.login__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.login__label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* Inputs del login: fondo oscuro con texto claro, acorde a la columna del
+   formulario. El caret claro garantiza que se lea mientras se escribe. */
+.login__input {
+  background: #0f172a;
+  color: #f0f0f0;
+  caret-color: #f0f0f0;
+
+  &::placeholder {
+    color: #94a3b8;
+  }
+
+  &:focus {
+    border-color: var(--p-primary-color, #059669);
+  }
+}
+
+/* El <input> interno de <p-password> se renderiza dentro del encapsulado del
+   propio componente Password, sin el hash _ngcontent del login; ::ng-deep
+   permite que la misma regla lo alcance. */
+:host ::ng-deep .login__password .login__input {
+  background: #0f172a;
+  color: #f0f0f0;
+  caret-color: #f0f0f0;
+
+  &::placeholder {
+    color: #94a3b8;
+  }
+}
+
+/* El Password de PrimeNG envuelve su input interno en .p-password input */
+.login__password {
+  width: 100%;
+}
+
+.login__input {
+  width: 100%;
+}
+
+.login__error {
+  display: block;
+}
+
+.login__submit {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+.login__submit::ng-deep .p-button {
+  width: 100%;
+}
+
+/* ---------- Responsivo muy pequeño ---------- */
+
+@media (max-width: 720px) {
+  .login {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .login__aside {
+    flex: none;
+    max-width: none;
+    min-height: 24rem;
+  }
+}

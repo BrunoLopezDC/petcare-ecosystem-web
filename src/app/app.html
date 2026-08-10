@@ -1,4 +1,4 @@
-<div class="app" [class.app--collapsed]="collapsed()">
+<div class="app" [class.app--collapsed]="collapsed() && !isLoginRoute()" [class.app--login]="isLoginRoute()">
   <aside class="app-sidenav">
     <div class="app-sidenav__brand">
       <i class="pi pi-heart app-sidenav__logo"></i>
@@ -6,6 +6,16 @@
     </div>
 
     <p-panelmenu class="app-sidenav__menu" [model]="navItems()" />
+
+    <button
+      type="button"
+      class="app-sidenav__logout"
+      aria-label="Cerrar sesión"
+      (click)="logout()"
+    >
+      <i class="pi pi-sign-out"></i>
+      <span class="app-sidenav__logout-label">Cerrar sesión</span>
+    </button>
 
     <button
       type="button"

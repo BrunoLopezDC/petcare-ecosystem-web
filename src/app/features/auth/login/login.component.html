@@ -1,0 +1,79 @@
+<section class="login">
+  <aside class="login__aside">
+    <div class="login__brand">
+      <i class="pi pi-heart login__brand-logo"></i>
+      <span class="login__brand-name">Panel de Mascotas</span>
+    </div>
+
+    <div class="login__aside-body">
+      <h1 class="login__headline">Cuidado y Seguimiento de Mascotas</h1>
+      <p class="login__tagline">
+        Administra el ecosistema de cuidado de mascotas: usuarios, roles
+        y actividad del sistema.
+      </p>
+    </div>
+
+    <footer class="login__aside-footer">Panel de Mascotas — v1.0</footer>
+  </aside>
+
+  <div class="login__panel">
+    <div class="login__form-wrap">
+      <header class="login__header">
+        <h2 class="login__title">Bienvenido de vuelta</h2>
+        <p class="login__subtitle">Ingresa tus credenciales para acceder al sistema</p>
+      </header>
+
+      <form class="login__form" (submit)="login($event)">
+        <div class="login__field">
+          <label class="login__label" for="login-email">Correo electrónico</label>
+          <input
+            #emailInput
+            pInputText
+            id="login-email"
+            type="email"
+            class="login__input"
+            placeholder="correo@ejemplo.mx"
+            autocomplete="email"
+            required
+            name="email"
+          />
+        </div>
+
+        <div class="login__field">
+          <label class="login__label" for="login-password">Contraseña</label>
+          <p-password
+            #passwordInput
+            id="login-password"
+            class="login__password"
+            inputId="login-password-input"
+            inputStyleClass="login__input"
+            [feedback]="false"
+            [toggleMask]="true"
+            placeholder="Tu contraseña"
+            autocomplete="current-password"
+            name="password"
+          />
+        </div>
+
+        @if (error(); as message) {
+          <p-message
+            class="login__error"
+            severity="error"
+            [text]="message"
+            styleClass="w-full"
+          />
+        }
+
+        <p-button
+          class="login__submit"
+          type="submit"
+          label="Iniciar sesión"
+          icon="pi pi-arrow-right"
+          iconPos="right"
+          [loading]="submitting()"
+          styleClass="login__submit-btn"
+        />
+      </form>
+    </div>
+  </div>
+</section>

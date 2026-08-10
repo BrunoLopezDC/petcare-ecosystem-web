@@ -134,6 +134,30 @@
   }
 }
 
+.app-sidenav__logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #cbd5e1;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    background: rgba(231, 76, 60, 0.18);
+    border-color: rgba(231, 76, 60, 0.45);
+    color: #ffd6d1;
+  }
+}
+
 /* --- Sidebar colapsado (solo íconos) --- */
 
 .app--collapsed .app-sidenav {
@@ -149,7 +173,8 @@
 }
 
 .app--collapsed .app-sidenav__name,
-.app--collapsed .app-sidenav__menu .p-panelmenu-header-label {
+.app--collapsed .app-sidenav__menu .p-panelmenu-header-label,
+.app--collapsed .app-sidenav__logout-label {
   display: none;
 }
 
@@ -160,8 +185,20 @@
   padding-right: 0;
 }
 
-.app--collapsed .app-sidenav__toggle {
+.app--collapsed .app-sidenav__toggle,
+.app--collapsed .app-sidenav__logout {
   width: 100%;
+}
+
+/* --- Ruta de login: sin sidebar ni padding, pantalla completa --- */
+
+.app--login .app-sidenav {
+  display: none;
+}
+
+.app--login .app-main {
+  padding: 0;
+  overflow: hidden;
 }
 
 /* ---------- Área de contenido (fondo claro) ---------- */
@@ -228,6 +265,17 @@
     margin-top: 0;
     width: auto;
     flex-shrink: 0;
+  }
+
+  .app-sidenav__logout {
+    width: auto;
+    margin-top: 0;
+    padding: 0.55rem 0.7rem;
+    flex-shrink: 0;
+  }
+
+  .app-sidenav__logout-label {
+    display: none;
   }
 }
 

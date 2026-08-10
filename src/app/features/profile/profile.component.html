@@ -1,0 +1,113 @@
+<section class="profile">
+  <header class="profile__header">
+    <h1 class="profile__title">Mi perfil</h1>
+    <p class="profile__subtitle">Consulta tu información y actualiza tu nombre o contraseña.</p>
+  </header>
+
+  @if (loading()) {
+    <p-message severity="info" [text]="'Cargando perfil…'" />
+  } @else {
+    <div class="profile__grid">
+      <!-- Datos de la cuenta (solo lectura) -->
+      <div class="profile__card">
+        <h2 class="profile__card-title">Datos de la cuenta</h2>
+        <dl class="profile__list">
+          <div class="profile__item">
+            <dt class="profile__term">Correo</dt>
+            <dd class="profile__value">{{ current()?.email }}</dd>
+          </div>
+          <div class="profile__item">
+            <dt class="profile__term">Rol</dt>
+            <dd class="profile__value">
+              <span [class]="current()?.role === 'admin' ? 'profile__role profile__role--admin' : 'profile__role'">
+                {{ current()?.role }}
+              </span>
+            </dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- Editar nombre -->
+      <div class="profile__card">
+        <h2 class="profile__card-title">Editar nombre</h2>
+        <form class="profile__form" (submit)="saveName($event)">
+          <div class="profile__field">
+            <label class="profile__label" for="full_name">Nombre completo</label>
+            <input
+              id="full_name"
+              pInputText
+              #nameInput
+              class="profile__input"
+              [value]="current()?.full_name ?? ''"
+              autocomplete="name"
+            />
+          </div>
+
+          @if (nameFeedback()) {
+            <p-message
+              [severity]="nameError() ? 'error' : 'success'"
+              [text]="nameFeedback() ?? ''"
+            />
+          }
+
+          <p-button
+            type="submit"
+            label="Guardar cambios"
+            icon="pi pi-check"
+            [loading]="savingName()"
+            styleClass="profile__submit"
+          />
+        </form>
+      </div>
+
+      <!-- Cambiar contraseña -->
+      <div class="profile__card">
+        <h2 class="profile__card-title">Cambiar contraseña</h2>
+        <form class="profile__form" (submit)="savePassword($event)">
+          <div class="profile__field">
+            <label class="profile__label" for="new_password">Nueva contraseña</label>
+            <p-password
+              #newPasswordInput
+              id="new_password"
+              inputId="new_password-input"
+              inputStyleClass="profile__input"
+              class="profile__password"
+              [feedback]="false"
+              [toggleMask]="true"
+              autocomplete="new-password"
+            />
+          </div>
+
+          <div class="profile__field">
+            <label class="profile__label" for="confirm_password">Confirmar contraseña</label>
+            <p-password
+              #confirmPasswordInput
+              id="confirm_password"
+              inputId="confirm-password-input"
+              inputStyleClass="profile__input"
+              class="profile__password"
+              [feedback]="false"
+              [toggleMask]="true"
+              autocomplete="new-password"
+            />
+          </div>
+
+          @if (passwordFeedback()) {
+            <p-message
+              [severity]="passwordError() ? 'error' : 'success'"
+              [text]="passwordFeedback() ?? ''"
+            />
+          }
+
+          <p-button
+            type="submit"
+            label="Cambiar contraseña"
+            icon="pi pi-lock"
+            [loading]="savingPassword()"
+            styleClass="profile__submit"
+          />
+        </form>
+      </div>
+    </div>
+  }
+</section>

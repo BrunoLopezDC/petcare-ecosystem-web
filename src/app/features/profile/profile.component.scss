@@ -1,0 +1,117 @@
+.profile {
+  padding: 1.5rem;
+}
+
+.profile__header {
+  margin-bottom: 1.5rem;
+}
+
+.profile__title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.profile__subtitle {
+  margin: 0.4rem 0 0;
+  color: #64748b;
+}
+
+.profile__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.profile__card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+}
+
+.profile__card-title {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* ---------- Datos de la cuenta ---------- */
+
+.profile__list {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.profile__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.profile__term {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+}
+
+.profile__value {
+  margin: 0;
+  font-size: 1rem;
+  color: #1a1a1a;
+  word-break: break-word;
+}
+
+.profile__role {
+  display: inline-block;
+  padding: 0.15rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: #eef2f7;
+  color: #334155;
+}
+
+.profile__role--admin {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+/* ---------- Formularios ---------- */
+
+.profile__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.profile__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.profile__label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.profile__input {
+  width: 100%;
+}
+
+.profile__password {
+  width: 100%;
+}
+
+.profile__submit {
+  align-self: flex-start;
+}
