@@ -13,15 +13,6 @@
   } @else {
     <p-card class="roles-perm__card">
       <ng-template #content>
-        <div class="roles-perm__intro">
-          <p>
-            Esta matriz es el <strong>catálogo de referencia</strong> de permisos por rol que se usa en el sistema.
-            Fíjate que las decisiones de acceso hoy se basan en el campo <code>role</code> del perfil de cada usuario
-            (vía los guards de Angular), no en consultas dinámicas a esta tabla en cada acción. Editar esta matriz
-            actualiza el catálogo, pero no el comportamiento real de los guardias ni de la base de datos.
-          </p>
-        </div>
-
         <div class="roles-perm__table-wrap">
           <table class="roles-perm__matrix">
             <thead>

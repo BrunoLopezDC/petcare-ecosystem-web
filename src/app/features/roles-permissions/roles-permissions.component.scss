@@ -26,28 +26,6 @@
   }
 }
 
-.roles-perm__intro {
-  margin-bottom: 1rem;
-  padding: 0.9rem 1rem;
-  border: 1px solid var(--p-content-border-color, #cbd5e1);
-  border-radius: var(--p-content-border-radius, 8px);
-  background: color-mix(in srgb, var(--p-primary-subtle-background, #d1fae5), white 30%);
-  color: var(--p-text-color, #1a1a1a);
-
-  p {
-    margin: 0;
-    font-size: 0.92rem;
-    line-height: 1.5;
-  }
-
-  code {
-    font-size: 0.85em;
-    background: rgba(0, 0, 0, 0.06);
-    padding: 0.1rem 0.35rem;
-    border-radius: 4px;
-  }
-}
-
 .roles-perm__table-wrap {
   :host-context(.app-main) & {
     overflow-x: auto;
@@ -72,8 +50,8 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: var(--p-text-muted-color, #64748b);
-    background: var(--p-surface-50, #f8fafc);
+    color: var(--p-datatable-header-cell-color, #0f172a);
+    background: var(--p-datatable-header-cell-background, #ffffff);
   }
 }
 
